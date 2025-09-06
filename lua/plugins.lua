@@ -1,37 +1,54 @@
--- This file can be loaded by calling `lua require('plugins')` from your init.vim
+return {
+    { "ellisonleao/gruvbox.nvim" },
+    {
+        'nvim-telescope/telescope.nvim',
+        tag = '0.1.8',
+        dependencies = {
+            {'nvim-lua/plenary.nvim'}
+        }
+    },
+    {
+        "nvim-treesitter/nvim-treesitter",
+        lazy = false,
+        build = ":TSUpdate",
+        config = function()
+            require('nvim-treesitter.configs').setup({
+                -- A list of parser names, or "all"
+                ensure_installed = { "tsx",  "typescript", "javascript", "c", "rust" },
 
--- Only required if you have packer configured as `opt`
-vim.cmd [[packadd packer.nvim]]
+                -- Install parsers synchronously (only applied to `ensure_installed`)
+                sync_install = false,
 
-return require('packer').startup(function(use)
-  -- Packer can manage itself
-  use 'wbthomason/packer.nvim'
-  use {
-      'nvim-telescope/telescope.nvim', tag = '0.1.0',
-      requires = { {'nvim-lua/plenary.nvim'} }
-  }
-  use({"nvim-treesitter/nvim-treesitter", run = ":TSUpdate"})
-  use("jiangmiao/auto-pairs")
-  use {
-      'VonHeikemen/lsp-zero.nvim',
-      branch = 'v1.x',
-      requires = {
-          -- LSP Support
-          {'neovim/nvim-lspconfig'},
-          {'williamboman/mason.nvim'},
-          {'williamboman/mason-lspconfig.nvim'},
+                -- Automatically install missing parsers when entering buffer
+                -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
+                auto_install = false,
 
-          -- Autocompletion
-          {'hrsh7th/nvim-cmp'},
-          {'hrsh7th/cmp-buffer'},
-          {'hrsh7th/cmp-path'},
-          {'saadparwaiz1/cmp_luasnip'},
-          {'hrsh7th/cmp-nvim-lsp'},
-          {'hrsh7th/cmp-nvim-lua'},
+                highlight = {
+                    -- `false` will disable the whole extension
+                    enable = true,
+                    disable = {
+                        'tsx'
+                    },
 
-          -- Snippets
-          {'rafamadriz/friendly-snippets'},
-          { "L3MON4D3/LuaSnip" }
-      }
-  }
-end)
+                    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+                    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+                    -- Using this option may slow down your editor, and you may see some duplicate highlights.
+                    -- Instead of true it can also be a list of languages
+                    additional_vim_regex_highlighting = false,
+                },
+                indent = {
+                    enable = false
+                },
+            })
+        end
+    },
+    {
+        "jiangmiao/auto-pairs"
+    },
+    {
+        "stevearc/oil.nvim",
+        config = function()
+            require("oil").setup()
+        end
+    }
+}
