@@ -14,7 +14,7 @@ opt.hidden = true          -- opening new file hides current instead of closing
 opt.wrap = false           -- switch off line wrapping
 opt.tabstop = 4            -- Set tabs to 4 characaters wide
 opt.shiftwidth = 4         -- Set indentation width to match tab
--- opt.softtabstop = 4        -- Set the soft tab to match the hard tab width
+opt.softtabstop = 4        -- Set the soft tab to match the hard tab width
 opt.expandtab = true       -- Use spaces instead of actual hard tabs
 opt.autoindent = true      -- Enable basic auto indentation
 opt.copyindent = true      -- Preserve manual indentation
@@ -65,31 +65,52 @@ vim.keymap.set("n", "<leader>c", ":bd<CR>", { silent = true })
 vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, { silent = true })
 vim.keymap.set("n", "<leader>o", ":Oil<CR>", { silent = true })
 
-local theme = require('telescope.themes').get_ivy({ path_display = "relative", previewer = false })
+local ivy_theme = require('telescope.themes')
+    .get_ivy({ previewer = false })
 local builtin = require('telescope.builtin')
 vim.keymap.set("n", "<leader>f", function ()
-    builtin.find_files(theme)
+    builtin.find_files(ivy_theme)
 end, { silent = true })
 vim.keymap.set("n", "<leader>e", function ()
-    builtin.find_files(theme)
+    builtin.find_files(ivy_theme)
 end, { silent = true })
 vim.keymap.set("n", "<leader>b", function ()
-    builtin.buffers(theme)
+    builtin.buffers(ivy_theme)
 end, { silent = true })
 vim.keymap.set("n", "<leader>s", function ()
-    builtin.live_grep(theme)
+    builtin.live_grep(ivy_theme)
 end, { silent = true })
 vim.keymap.set("n", "<leader>d", function ()
-    builtin.diagnostics(theme)
+    builtin.diagnostics(ivy_theme)
 end, { silent = true })
 vim.keymap.set("n", "<leader>u", function ()
-    builtin.lsp_references(theme)
+    builtin.lsp_references(ivy_theme)
+end, { silent = true })
+
+local dropdown_theme = require('telescope.themes')
+    .get_dropdown()
+vim.keymap.set("n", "gd", function ()
+    builtin.lsp_definitions(dropdown_theme)
+end, { silent = true })
+vim.keymap.set("n", "gi", function ()
+    builtin.lsp_implementations(dropdown_theme)
 end, { silent = true })
 
 vim.keymap.set("n", "K", function ()
     vim.lsp.buf.hover({ border = "rounded" })
 end, { silent = true })
 
+
+---- RETURN TO LAST POSITION ----
+vim.api.nvim_create_autocmd("BufReadPost", {
+    desc = "Auto jump to last position",
+    group = vim.api.nvim_create_augroup("auto-last-position", { clear = true }),
+    callback = function(args)
+        local position = vim.api.nvim_buf_get_mark(args.buf, [["]])
+        local winid = vim.fn.bufwinid(args.buf)
+        pcall(vim.api.nvim_win_set_cursor, winid, position)
+    end,
+})
 
 ---- STATUSLINE ----
 local function get_hl_color(group_name, attr)
@@ -163,7 +184,7 @@ function statusline.build()
     }, " ")
 end
 statusline.static_build()
--- update the statusline every 3s
+-- update the statusline every 1.5s
 local timer = vim.loop.new_timer()
 timer:start(0, 1500, vim.schedule_wrap(function()
     opt.statusline = statusline.build()
