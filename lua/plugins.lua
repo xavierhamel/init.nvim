@@ -76,13 +76,6 @@ return {
 
             completion = {
                 documentation = { auto_show = false },
-                trigger = {
-                    show_on_trigger_character = false,
-                }
-                -- ghost_text = { enabled = true },
-                -- list = {
-                --     selection = { preselect = false, auto_insert = false }
-                -- }
             },
 
             sources = {

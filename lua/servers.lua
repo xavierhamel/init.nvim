@@ -186,7 +186,7 @@ vim.lsp.enable("rust_analyzer")
 vim.lsp.config.ts_ls = {
     cmd = { "typescript-language-server", "--stdio" },
     filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" },
-    root_markers = { "tsconfig.json", "jsconfig.json", "package.json", ".git" },
+    root_markers = { "turbo.json", "tsconfig.json", "jsconfig.json", "package.json", ".git" },
 
     init_options = {
         hostInfo = "neovim",
@@ -194,6 +194,9 @@ vim.lsp.config.ts_ls = {
 }
 -- end
 
+-- eslint
+require('eslint')
+-- end
 -- CSSls
 -- vim.lsp.config.cssls = {
 --     cmd = { "vscode-css-language-server", "--stdio" },
