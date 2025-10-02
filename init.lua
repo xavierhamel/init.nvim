@@ -70,6 +70,7 @@ vim.keymap.set("n", "<leader>C", ":bd!<CR>", { silent = true })
 vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, { silent = true })
 vim.keymap.set("n", "<leader>o", ":Oil<CR>", { silent = true })
 vim.keymap.set("n", "<leader>p", ":EslintFixAll<CR>", { silent = true })
+vim.keymap.set("n", "<leader>g", ":terminal lazygit<CR>", { silent = true })
 
 local ivy_theme = require('telescope.themes')
     .get_ivy({ previewer = false })
