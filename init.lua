@@ -93,7 +93,7 @@ vim.keymap.set("n", "<leader>d", function ()
     builtin.diagnostics(ivy_theme)
 end, { silent = true })
 vim.keymap.set("n", "<leader>u", function ()
-    ivy_theme.winnr = vim.api.nvim_get_current_win()
+    -- ivy_theme.winnr = vim.api.nvim_get_current_win()
     builtin.lsp_references(ivy_theme)
 end, { silent = true })
 
