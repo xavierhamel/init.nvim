@@ -1,3 +1,9 @@
+---- TODO ----
+-- [ ] Update error colors (less red)
+-- [ ] Rename term buffers in telescope (implement own buffers)
+-- [ ] Improves colors of telescope viewer (files)
+-- [ ] Improve file structure in config (lsp)
+
 ---- PLUGINS ----
 require("config.lazy")
 require("lsp")
@@ -58,19 +64,57 @@ vim.cmd("colorscheme gruvbox")
 api.nvim_set_hl(0, "NormalFloat", { bg = "#181B1C" })
 api.nvim_set_hl(0, "Operator", { fg = "#ebdbb2" })
 
+---- STRING UTILS ----
+function string.starts(str, starting)
+   return string.sub(str, 1, string.len(starting)) == starting
+end
+function string.ends(str, ending)
+   return ending == "" or str:sub(-#ending) == ending
+end
+
 ---- REMAPS ----
 vim.g.mapleader = " "
-vim.keymap.set("n", "<leader>t", ":terminal<CR>", { silent = true })
+vim.keymap.set("n", "<leader>w", ":source $MYVIMRC<CR>:echo \"[INFO] config reloaded\"<CR>", { silent = true })
 vim.keymap.set("n", "<leader>n", ":bn<CR>", { silent = true })
 vim.keymap.set("n", "<leader>a", "<C-6>", { silent = true })
 vim.keymap.set("n", "<leader>h", ":noh<CR>", { silent = true })
-vim.keymap.set("n", "<leader>x", ":%!xxd<CR>", { silent = true })
-vim.keymap.set("n", "<leader>c", ":bd<CR>", { silent = true })
-vim.keymap.set("n", "<leader>C", ":bd!<CR>", { silent = true })
+-- vim.keymap.set("n", "<leader>x", ":%!xxd<CR>", { silent = true })
 vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, { silent = true })
 vim.keymap.set("n", "<leader>o", ":Oil<CR>", { silent = true })
 vim.keymap.set("n", "<leader>p", ":EslintFixAll<CR>", { silent = true })
-vim.keymap.set("n", "<leader>g", ":terminal lazygit<CR>", { silent = true })
+
+vim.keymap.set("n", "<leader>c", function ()
+  local current_buffer = vim.api.nvim_buf_get_name(0)
+  if string.starts(current_buffer, "term") then
+    vim.cmd("bd!")
+  else
+    vim.cmd("bd")
+  end
+end, { silent = true })
+
+vim.keymap.set("n", "<leader>g", function ()
+  local buffers = vim.api.nvim_list_bufs()
+  for _, bufnr in ipairs(buffers) do
+    local name = vim.api.nvim_buf_get_name(bufnr)
+    if string.starts(name, "term") and string.ends(name, "lazygit") then
+      vim.cmd("buffer " .. name)
+      return
+    end
+  end
+  vim.cmd("terminal lazygit")
+end, { silent = true })
+
+vim.keymap.set("n", "<leader>t", function ()
+  local buffers = vim.api.nvim_list_bufs()
+  for _, bufnr in ipairs(buffers) do
+    local name = vim.api.nvim_buf_get_name(bufnr)
+    if string.starts(name, "term") and not string.ends(name, "lazygit") then
+      vim.cmd("buffer " .. name)
+      return
+    end
+  end
+  vim.cmd("terminal")
+end, { silent = true })
 
 local ivy_theme = require('telescope.themes')
     .get_ivy({ previewer = false })

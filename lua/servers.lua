@@ -71,30 +71,6 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 -- end
 
--- Go
--- vim.lsp.config.gopls = {
---     cmd = { "gopls" },
---     filetypes = { "go", "gotempl", "gowork", "gomod" },
---     root_markers = { ".git", "go.mod", "go.work", vim.uv.cwd() },
---     settings = {
---         gopls = {
---             completeUnimported = true,
---             usePlaceholders = true,
---             analyses = {
---                 unusedparams = true,
---             },
---             ["ui.inlayhint.hints"] = {
---                 compositeLiteralFields = true,
---                 constantValues = true,
---                 parameterNames = true,
---                 rangeVariableTypes = true,
---             },
---         },
---     },
--- }
--- vim.lsp.enable("gopls")
--- end
-
 -- C/C++
 vim.lsp.config.clangd = {
     cmd = {
@@ -157,36 +133,12 @@ vim.lsp.config.rust_analyzer = {
 vim.lsp.enable("rust_analyzer")
 -- end
 
--- Typst
--- vim.lsp.config.tinymist = {
---     cmd = { "tinymist" },
---     filetypes = { "typst" },
---     root_markers = { ".git", vim.uv.cwd() },
--- }
--- 
--- vim.lsp.enable("tinymist")
--- end
-
--- Bash
--- vim.lsp.config.bashls = {
---     cmd = { "bash-language-server", "start" },
---     filetypes = { "bash", "sh", "zsh" },
---     root_markers = { ".git", vim.uv.cwd() },
---     settings = {
---         bashIde = {
---             globPattern = vim.env.GLOB_PATTERN or "*@(.sh|.inc|.bash|.command)",
---         },
---     },
--- }
--- vim.lsp.enable("bashls")
--- end
-
 -- Web-dev
 -- TSServer
 vim.lsp.config.ts_ls = {
     cmd = { "typescript-language-server", "--stdio" },
     filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" },
-    root_markers = { "turbo.json", "tsconfig.json", "jsconfig.json", "package.json", ".git" },
+    root_markers = { ".git", "turbo.json", "tsconfig.json", "jsconfig.json", "package.json" },
 
     init_options = {
         hostInfo = "neovim",
@@ -197,82 +149,5 @@ vim.lsp.config.ts_ls = {
 -- eslint
 require('eslint')
 -- end
--- CSSls
--- vim.lsp.config.cssls = {
---     cmd = { "vscode-css-language-server", "--stdio" },
---     filetypes = { "css", "scss" },
---     root_markers = { "package.json", ".git" },
---     init_options = {
---         provideFormatter = true,
---     },
--- }
--- end
-
--- TailwindCss
--- vim.lsp.config.tailwindcssls = {
---     cmd = { "tailwindcss-language-server", "--stdio" },
---     filetypes = {
---         "ejs",
---         "html",
---         "css",
---         "scss",
---         "javascript",
---         "javascriptreact",
---         "typescript",
---         "typescriptreact",
---     },
---     root_markers = {
---         "tailwind.config.js",
---         "tailwind.config.cjs",
---         "tailwind.config.mjs",
---         "tailwind.config.ts",
---         "postcss.config.js",
---         "postcss.config.cjs",
---         "postcss.config.mjs",
---         "postcss.config.ts",
---         "package.json",
---         "node_modules",
---     },
---     settings = {
---         tailwindCSS = {
---             classAttributes = { "class", "className", "class:list", "classList", "ngClass" },
---             includeLanguages = {
---                 eelixir = "html-eex",
---                 eruby = "erb",
---                 htmlangular = "html",
---                 templ = "html",
---             },
---             lint = {
---                 cssConflict = "warning",
---                 invalidApply = "error",
---                 invalidConfigPath = "error",
---                 invalidScreen = "error",
---                 invalidTailwindDirective = "error",
---                 invalidVariant = "error",
---                 recommendedVariantOrder = "warning",
---             },
---             validate = true,
---         },
---     },
--- }
--- -- end
--- 
--- -- HTML
--- vim.lsp.config.htmlls = {
---     cmd = { "vscode-html-language-server", "--stdio" },
---     filetypes = { "html" },
---     root_markers = { "package.json", ".git" },
--- 
---     init_options = {
---         configurationSection = { "html", "css", "javascript" },
---         embeddedLanguages = {
---             css = true,
---             javascript = true,
---         },
---         provideFormatter = true,
---     },
--- }
--- end
-
-vim.lsp.enable({ "ts_ls" }) -- "cssls", "tailwindcssls", "htmlls" })
+vim.lsp.enable({ "ts_ls" })
 
