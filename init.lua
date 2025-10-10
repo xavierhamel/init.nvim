@@ -1,5 +1,4 @@
 ---- TODO ----
--- [ ] Update error colors (less red)
 -- [ ] Rename term buffers in telescope (implement own buffers)
 -- [ ] Improves colors of telescope viewer (files)
 -- [ ] Improve file structure in config (lsp)
@@ -57,7 +56,8 @@ require("gruvbox").setup({
     ["@comment"] = { fg = "#fe8019" },
     ["@variable"] = { fg = "#83a598" },
     ["@module"] = { fg = "#b8bb26" },
-    ["@namespace"] = { fg = "#8ec07c" }
+    ["@namespace"] = { fg = "#8ec07c" },
+    ["ErrorMsg"] = { fg = "#E6DFDF", bg = "#342322" },
   },
 })
 vim.cmd("colorscheme gruvbox")
