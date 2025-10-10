@@ -9,6 +9,7 @@
 -- [ ] Add goto source
 -- [ ] Improve :Blame
 -- [ ] Better lua autocomplete?
+-- [ ] Show package source in autocomplete
 
 ---- PLUGINS ----
 require("config.lazy")
