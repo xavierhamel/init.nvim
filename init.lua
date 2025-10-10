@@ -2,6 +2,12 @@
 -- [ ] Rename term buffers in telescope (implement own buffers)
 -- [ ] Improves colors of telescope viewer (files)
 -- [ ] Improve file structure in config (lsp)
+-- [ ] Add projects with telescope (?)
+-- [ ] Add % of file down
+-- [ ] List all functions in file or goto next function in file
+-- [ ] Add goto source
+-- [ ] Improve :Blame
+-- [ ] Better lua autocomplete?
 
 ---- PLUGINS ----
 require("config.lazy")
@@ -166,6 +172,47 @@ vim.api.nvim_create_user_command("Code", function(opts)
   }
 )
 
+---- GOTO SOURCR ----
+local function ts_goto_source()
+  local client = vim.lsp.get_clients({ name = "ts_ls" })[1]
+  if client then
+    local command = {
+        command = "_typescript.goToSourceDefinition",
+        arguments = {
+          vim.api.nvim_buf_get_name(0),
+          {
+            line = vim.api.nvim_win_get_cursor(0)[1],
+            character = vim.api.nvim_win_get_cursor(0)[1],
+          }
+        },
+    }
+    print(#client.commands)
+    -- print(client.exec_cmd(command, { vim.api.nvim_get_current_buf() }))
+  end
+end
+
+vim.api.nvim_create_user_command("TsGoto", function(opts)
+    ts_goto_source()
+  end,
+  {
+    desc = "Goto source",
+    nargs = 0,
+  }
+)
+
+---- GIT BLAME ----
+-- git blame -L 618,618 ./packages/bridge/src/services/bot/index.ts --line-porcelain
+vim.api.nvim_create_user_command("Blame", function(opts)
+    local line = vim.api.nvim_win_get_cursor(0)[1]
+    local output = vim.fn.system("git blame --date=relative --format='%an %ad' -L " .. line  .. "," .. line .. " " .. vim.api.nvim_buf_get_name(0))
+    print(output)
+  end,
+  {
+    desc = "Git Blame",
+    nargs = 0,
+  }
+)
+
 ---- RETURN TO LAST POSITION ----
 vim.api.nvim_create_autocmd("BufReadPost", {
     desc = "Auto jump to last position",
@@ -176,6 +223,7 @@ vim.api.nvim_create_autocmd("BufReadPost", {
         pcall(vim.api.nvim_win_set_cursor, winid, position)
     end,
 })
+
 
 ---- STATUSLINE ----
 local function get_hl_color(group_name, attr)
