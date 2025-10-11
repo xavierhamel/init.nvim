@@ -1,5 +1,4 @@
 -- Initially taken from [NTBBloodbath](https://github.com/NTBBloodbath/nvim/blob/main/lua/core/lsp.lua)
--- modified almost 80% by me
 
 -- Diagnostics
 local config = {
@@ -112,7 +111,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 -- Servers
-require("servers")
+require("lsp.servers")
 
 -- Start, Stop, Restart, Log commands
 vim.api.nvim_create_user_command("LspStart", function()

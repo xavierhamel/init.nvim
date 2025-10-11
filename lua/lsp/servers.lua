@@ -147,7 +147,7 @@ vim.lsp.config('ts_ls', {
 -- end
 
 -- eslint
-require('lua.lsp.eslint')
+require('lsp.eslint')
 -- end
 vim.lsp.enable({ "ts_ls" })
 

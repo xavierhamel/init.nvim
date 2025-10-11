@@ -1,22 +1,23 @@
----- TODO ----
--- [ ] Rename term buffers in telescope (implement own buffers)
--- [ ] Improves colors of telescope viewer (files)
--- [ ] Improve file structure in config (lsp)
--- [ ] Add projects with telescope (?)
--- [ ] Add % of file down
--- [ ] List all functions in file or goto next function in file
--- [ ] Add goto source
--- [ ] Improve :Blame
--- [ ] Better lua autocomplete?
--- [ ] Show package source in autocomplete
-
----- PLUGINS ----
-require("config.lazy")
-require("lsp")
-
 -- External dependencies:
 --  ripgrep
 --  git (for statusline)
+
+-- TODO
+-- [ ] Rename term buffers in telescope (implement own buffers)
+-- [ ] Improves colors of telescope viewer (files)
+-- [x] Improve file structure in config (lsp)
+-- [x] Add % of file down
+-- [x] Add goto source typescript
+-- [x] Improve :Blame
+-- [o] Show package source in autocomplete
+-- [ ] Improve readme
+-- [x] Show completion in object (TS)
+
+---- PLUGINS ----
+require("config.lazy")
+require("lsp.lsp")
+require("keymap")
+
 
 local opt = vim.opt
 local api = vim.api
@@ -71,100 +72,8 @@ vim.cmd("colorscheme gruvbox")
 api.nvim_set_hl(0, "NormalFloat", { bg = "#181B1C" })
 api.nvim_set_hl(0, "Operator", { fg = "#ebdbb2" })
 
----- STRING UTILS ----
-function string.starts(str, starting)
-   return string.sub(str, 1, string.len(starting)) == starting
-end
-function string.ends(str, ending)
-   return ending == "" or str:sub(-#ending) == ending
-end
-
----- REMAPS ----
-vim.g.mapleader = " "
-vim.keymap.set("n", "<leader>w", ":source $MYVIMRC<CR>:echo \"[INFO] config reloaded\"<CR>", { silent = true })
-vim.keymap.set("n", "<leader>n", ":bn<CR>", { silent = true })
-vim.keymap.set("n", "<leader>a", "<C-6>", { silent = true })
-vim.keymap.set("n", "<leader>h", ":noh<CR>", { silent = true })
--- vim.keymap.set("n", "<leader>x", ":%!xxd<CR>", { silent = true })
-vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, { silent = true })
-vim.keymap.set("n", "<leader>o", ":Oil<CR>", { silent = true })
-vim.keymap.set("n", "<leader>p", ":EslintFixAll<CR>", { silent = true })
-
-vim.keymap.set("n", "<leader>c", function ()
-  local current_buffer = vim.api.nvim_buf_get_name(0)
-  if string.starts(current_buffer, "term") then
-    vim.cmd("bd!")
-  else
-    vim.cmd("bd")
-  end
-end, { silent = true })
-
-vim.keymap.set("n", "<leader>g", function ()
-  local buffers = vim.api.nvim_list_bufs()
-  for _, bufnr in ipairs(buffers) do
-    local name = vim.api.nvim_buf_get_name(bufnr)
-    if string.starts(name, "term") and string.ends(name, "lazygit") then
-      vim.cmd("buffer " .. name)
-      return
-    end
-  end
-  vim.cmd("terminal lazygit")
-end, { silent = true })
-
-vim.keymap.set("n", "<leader>t", function ()
-  local buffers = vim.api.nvim_list_bufs()
-  for _, bufnr in ipairs(buffers) do
-    local name = vim.api.nvim_buf_get_name(bufnr)
-    if string.starts(name, "term") and not string.ends(name, "lazygit") then
-      vim.cmd("buffer " .. name)
-      return
-    end
-  end
-  vim.cmd("terminal")
-end, { silent = true })
-
-local ivy_theme = require('telescope.themes')
-    .get_ivy({ previewer = false })
-local builtin = require('telescope.builtin')
-
-vim.keymap.set("n", "<leader>f", function ()
-    builtin.find_files(ivy_theme)
-end, { silent = true })
-vim.keymap.set("n", "<leader>e", function ()
-    vim.diagnostic.open_float({ "line" })
-end, { silent = true })
-
-vim.keymap.set("n", "<leader>b", function ()
-    builtin.buffers(ivy_theme)
-end, { silent = true })
-vim.keymap.set("n", "<leader>s", function ()
-    builtin.live_grep(ivy_theme)
-end, { silent = true })
-vim.keymap.set("n", "<leader>d", function ()
-    builtin.diagnostics(ivy_theme)
-end, { silent = true })
-vim.keymap.set("n", "<leader>u", function ()
-    -- ivy_theme.winnr = vim.api.nvim_get_current_win()
-    builtin.lsp_references(ivy_theme)
-end, { silent = true })
-
-local dropdown_theme = require('telescope.themes')
-    .get_dropdown()
-vim.keymap.set("n", "gd", function ()
-    dropdown_theme.winnr = vim.api.nvim_get_current_win()
-    builtin.lsp_definitions(dropdown_theme)
-end, { silent = true })
-vim.keymap.set("n", "gi", function ()
-    dropdown_theme.winnr = vim.api.nvim_get_current_win()
-    builtin.lsp_implementations(dropdown_theme)
-end, { silent = true })
-
-vim.keymap.set("n", "K", function ()
-    vim.lsp.buf.hover({ border = "rounded" })
-end, { silent = true })
-
 ---- OPEN VS CODE AT CURRENT LOCATION ----
-vim.api.nvim_create_user_command("Code", function(opts)
+vim.api.nvim_create_user_command("Code", function()
     vim.fn.system("code . --goto " .. vim.api.nvim_buf_get_name(0) .. ":" .. vim.api.nvim_win_get_cursor(0)[1])
   end,
   {
@@ -173,40 +82,33 @@ vim.api.nvim_create_user_command("Code", function(opts)
   }
 )
 
----- GOTO SOURCR ----
-local function ts_goto_source()
-  local client = vim.lsp.get_clients({ name = "ts_ls" })[1]
-  if client then
-    local command = {
-        command = "_typescript.goToSourceDefinition",
-        arguments = {
-          vim.api.nvim_buf_get_name(0),
-          {
-            line = vim.api.nvim_win_get_cursor(0)[1],
-            character = vim.api.nvim_win_get_cursor(0)[1],
-          }
-        },
-    }
-    print(#client.commands)
-    -- print(client.exec_cmd(command, { vim.api.nvim_get_current_buf() }))
-  end
-end
-
-vim.api.nvim_create_user_command("TsGoto", function(opts)
-    ts_goto_source()
-  end,
-  {
-    desc = "Goto source",
-    nargs = 0,
-  }
-)
-
 ---- GIT BLAME ----
--- git blame -L 618,618 ./packages/bridge/src/services/bot/index.ts --line-porcelain
-vim.api.nvim_create_user_command("Blame", function(opts)
-    local line = vim.api.nvim_win_get_cursor(0)[1]
-    local output = vim.fn.system("git blame --date=relative --format='%an %ad' -L " .. line  .. "," .. line .. " " .. vim.api.nvim_buf_get_name(0))
-    print(output)
+vim.api.nvim_create_user_command("Blame", function()
+    local line_no = vim.api.nvim_win_get_cursor(0)[1]
+    local output = vim.fn.system("git blame --line-porcelain -L " .. line_no  .. "," .. line_no .. " " .. vim.api.nvim_buf_get_name(0))
+    local timestamp = nil
+    local author = nil
+    local summary = nil
+    for line in output:gmatch("([^\r\n]*)([\r\n]?)") do
+      if string.starts(line, "summary") then
+        summary = string.sub(line, #"summary ")
+      end
+      if string.starts(line, "author ") then
+        author = string.sub(line, #"author ")
+      end
+      if string.starts(line, "author-time") then
+        timestamp = tonumber(string.sub(line, #"author-time "))
+      end
+    end
+    if author ~= nil and timestamp ~= nil and summary ~= nil then
+      vim.api.nvim_echo({
+        {os.date("%Y-%m-%d", timestamp), '@field'},
+        {',', '@markup.list.unchecked'},
+        {author, '@constant'},
+        {',', '@markup.list.unchecked'},
+        {summary, '@markup.environment'},
+      }, false, {})
+    end
   end,
   {
     desc = "Git Blame",
@@ -224,7 +126,6 @@ vim.api.nvim_create_autocmd("BufReadPost", {
         pcall(vim.api.nvim_win_set_cursor, winid, position)
     end,
 })
-
 
 ---- STATUSLINE ----
 local function get_hl_color(group_name, attr)
@@ -289,7 +190,7 @@ function statusline.static_build()
     statusline.left = string.format("%s %s %s %s",
         dark_bg, statusline.git_branch(), light_bg, "%f", "%m")
     statusline.right = string.format("%s %s %s %s %s ",
-        "%=", "%y", dark_bg, "%l:%c", light_bg)
+        "%=", "%y", dark_bg, "%l:%c %p%%", light_bg)
 end
 function statusline.dynamic_build()
     return string.format(
