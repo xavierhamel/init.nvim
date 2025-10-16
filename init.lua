@@ -82,6 +82,43 @@ vim.api.nvim_create_user_command("Code", function()
   }
 )
 
+---- SCRATCHES ----
+local scratch_path = "~/Botpress/scratch/"
+
+local function open_scratch(_date, _extension)
+  local extension = "txt"
+  if _extension ~= nil then
+    extension = _extension
+  end
+  local date = os.date("%Y-%m-%d", os.time())
+  if _date ~= nil then
+    date = _date
+  end
+  vim.cmd("e " .. scratch_path .. date ..  "." .. extension)
+end
+
+vim.api.nvim_create_user_command("Scratch", function(opts)
+    local args = opts.fargs
+    local extension = nil
+    local date = nil
+    if #args > 0 then
+      if #args[1] > 4 then
+        date = args[2]
+      else
+        extension = args[1]
+      end
+    end
+    if #args > 1 then
+      date = args[2]
+    end
+    open_scratch(date, extension)
+  end,
+  {
+    desc = "Scratch pad. Usage: Scracth <extension|date> <date>. Default extension is 'txt'",
+    nargs = "*",
+  }
+)
+
 ---- GIT BLAME ----
 vim.api.nvim_create_user_command("Blame", function()
     local line_no = vim.api.nvim_win_get_cursor(0)[1]
