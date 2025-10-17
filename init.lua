@@ -12,6 +12,7 @@
 -- [o] Show package source in autocomplete
 -- [ ] Improve readme
 -- [x] Show completion in object (TS)
+-- [ ] Add a toggle in Telescope to ignore or not .gitignore
 
 ---- PLUGINS ----
 require("config.lazy")
