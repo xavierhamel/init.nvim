@@ -72,6 +72,7 @@ require("gruvbox").setup({
 vim.cmd("colorscheme gruvbox")
 api.nvim_set_hl(0, "NormalFloat", { bg = "#181B1C" })
 api.nvim_set_hl(0, "Operator", { fg = "#ebdbb2" })
+api.nvim_set_hl(0, "GitSignsCurrentLineBlame", { link = "GruvboxBg3"})
 
 ---- OPEN VS CODE AT CURRENT LOCATION ----
 vim.api.nvim_create_user_command("Code", function()
@@ -85,15 +86,20 @@ vim.api.nvim_create_user_command("Code", function()
 
 ---- SCRATCHES ----
 local scratch_path = "~/Botpress/scratch/"
+local seconds_in_a_day = 86400
 
 local function open_scratch(_date, _extension)
   local extension = "txt"
   if _extension ~= nil then
     extension = _extension
   end
-  local date = os.date("%Y-%m-%d", os.time())
+  local date = os.date("%d-%m-%y", os.time())
   if _date ~= nil then
-    date = _date
+    if _date == "hier" or _date == "yesterday" then
+      date = os.date("%d-%m-%y", os.time() - seconds_in_a_day)
+    else
+      date = _date
+    end
   end
   vim.cmd("e " .. scratch_path .. date ..  "." .. extension)
 end
@@ -103,8 +109,8 @@ vim.api.nvim_create_user_command("Scratch", function(opts)
     local extension = nil
     local date = nil
     if #args > 0 then
-      if #args[1] > 4 then
-        date = args[2]
+      if #args[1] > 3 then
+        date = args[1]
       else
         extension = args[1]
       end

@@ -61,5 +61,22 @@ return {
         version = '1.*',
         opts = cmp.options,
         opts_extend = { "sources.default" }
+    },
+    {
+      'lewis6991/gitsigns.nvim',
+      config = function()
+        require('gitsigns').setup {
+          current_line_blame = true,
+          current_line_blame_formatter = '       ⏹ <author>, <author_time:%R> - <summary>',
+          current_line_blame_opts = {
+            virt_text = true,
+            virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
+            delay = 0,
+            ignore_whitespace = true,
+            virt_text_priority = 5000,
+            use_focus = true,
+          },
+        }
+      end
     }
 }

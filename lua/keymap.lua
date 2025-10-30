@@ -110,19 +110,20 @@ end, { silent = true })
 vim.keymap.set("n", "<leader>d", function ()
     builtin.diagnostics(ivy_theme)
 end, { silent = true })
+
 vim.keymap.set("n", "<leader>u", function ()
-    -- ivy_theme.winnr = vim.api.nvim_get_current_win()
-    builtin.lsp_references(ivy_theme)
+    vim.lsp.buf.references()
 end, { silent = true })
 
 local dropdown_theme = require('telescope.themes')
     .get_dropdown()
 vim.keymap.set("n", "gd", function ()
-    dropdown_theme.winnr = vim.api.nvim_get_current_win()
-    builtin.lsp_definitions(dropdown_theme)
+    -- dropdown_theme.winnr = vim.api.nvim_get_current_win()
+    -- builtin.lsp_definitions(dropdown_theme)
+    vim.lsp.buf.definition()
 end, { silent = true })
 vim.keymap.set("n", "gi", function ()
-  if is_typescript_file() then
+  if is_typescript_file() and false then
     goto_typescript_implementation()
   else
     dropdown_theme.winnr = vim.api.nvim_get_current_win()

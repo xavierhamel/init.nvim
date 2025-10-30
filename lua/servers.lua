@@ -135,8 +135,8 @@ vim.lsp.enable("rust_analyzer")
 
 -- Web-dev
 -- TSServer
-vim.lsp.config('ts_ls', {
-    cmd = { "typescript-language-server", "--stdio" },
+vim.lsp.config('vtsls', {
+    cmd = { "vtsls", "--stdio", "--jsx" },
     filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" },
     root_markers = { ".git", "turbo.json", "tsconfig.json", "jsconfig.json", "package.json" },
 
@@ -144,10 +144,19 @@ vim.lsp.config('ts_ls', {
         hostInfo = "neovim",
     },
 })
+--  vim.lsp.config('ts_ls', {
+--      cmd = { "typescript-language-server", "--stdio" },
+--      filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" },
+--      root_markers = { ".git", "turbo.json", "tsconfig.json", "jsconfig.json", "package.json" },
+--  
+--      init_options = {
+--          hostInfo = "neovim",
+--      },
+--  })
 -- end
 
 -- eslint
 require('lua.lsp.eslint')
 -- end
-vim.lsp.enable({ "ts_ls" })
+vim.lsp.enable({ "vtsls" })
 
