@@ -74,6 +74,9 @@ api.nvim_set_hl(0, "NormalFloat", { bg = "#181B1C" })
 api.nvim_set_hl(0, "Operator", { fg = "#ebdbb2" })
 api.nvim_set_hl(0, "GitSignsCurrentLineBlame", { link = "GruvboxBg3"})
 
+---- COPILOT ----
+vim.g.copilot_enabled = false
+
 ---- OPEN VS CODE AT CURRENT LOCATION ----
 vim.api.nvim_create_user_command("Code", function()
     vim.fn.system("code . --goto " .. vim.api.nvim_buf_get_name(0) .. ":" .. vim.api.nvim_win_get_cursor(0)[1])
