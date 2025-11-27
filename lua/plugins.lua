@@ -16,7 +16,7 @@ return {
         config = function()
             require('nvim-treesitter.configs').setup({
                 -- A list of parser names, or "all"
-                ensure_installed = { "tsx",  "typescript", "javascript", "c", "rust" },
+                ensure_installed = { "tsx",  "typescript", "javascript", "c", "rust", "html" },
 
                 -- Install parsers synchronously (only applied to `ensure_installed`)
                 sync_install = false,
@@ -28,9 +28,6 @@ return {
                 highlight = {
                     -- `false` will disable the whole extension
                     enable = true,
-                    disable = {
-                        'tsx'
-                    },
 
                     -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
                     -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
@@ -52,8 +49,15 @@ return {
     {
         "stevearc/oil.nvim",
         config = function()
-            require("oil").setup()
-        end
+          require("oil").setup({
+            view_options = {
+              show_hidden = false,
+              is_hidden_file = function(name)
+                return name == ".DS_STORE"
+              end,
+            }
+          })
+        end,
     },
     {
         'saghen/blink.cmp',
@@ -81,5 +85,17 @@ return {
     },
     {
       'github/copilot.vim'
+    },
+    {
+      'windwp/nvim-ts-autotag',
+      config = function()
+        require('nvim-ts-autotag').setup({
+          opts = {
+            enable_close = true, -- Auto close tags
+            enable_rename = true, -- Auto rename pairs of tags
+            enable_close_on_slash = false -- Auto close on trailing </
+          },
+        })
+      end
     }
 }

@@ -13,7 +13,10 @@ CMP.options = {
   -- C-k: Toggle signature help (if signature.enabled = true)
   keymap = {
     preset = 'enter',
-    ['<C-e>'] = { "show" }
+    ['<C-e>'] = { "show" },
+    ['<C-j>'] = { 'select_next', 'fallback' },
+    ['<C-k>'] = { 'select_prev', 'fallback' },
+    ['<C-i>'] = { 'accept', 'fallback' }
   },
 
   appearance = {

@@ -96,10 +96,10 @@ local function open_scratch(_date, _extension)
   if _extension ~= nil then
     extension = _extension
   end
-  local date = os.date("%d-%m-%y", os.time())
+  local date = os.date("%y-%m-%d", os.time())
   if _date ~= nil then
     if _date == "hier" or _date == "yesterday" then
-      date = os.date("%d-%m-%y", os.time() - seconds_in_a_day)
+      date = os.date("%y-%m-%d", os.time() - seconds_in_a_day)
     else
       date = _date
     end

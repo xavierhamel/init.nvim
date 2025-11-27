@@ -183,4 +183,4 @@ vim.lsp.config.eslint = {
   },
 }
 
--- vim.lsp.enable({ "eslint" }) -- "cssls", "tailwindcssls", "htmlls" })
+vim.lsp.enable({ "eslint" }) -- "cssls", "tailwindcssls", "htmlls" })

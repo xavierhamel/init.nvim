@@ -46,7 +46,7 @@ vim.keymap.set("n", "<leader>h", ":noh<CR>", { silent = true })
 vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, { silent = true })
 vim.keymap.set("n", "<leader>o", ":Oil<CR>", { silent = true })
 vim.keymap.set("n", "<leader>p", ":EslintFixAll<CR>", { silent = true })
-vim.keymap.set('i', '<C-S>', '<Plug>(copilot-suggest)')
+vim.keymap.set('i', '<C-U>', '<Plug>(copilot-suggest)')
 
 vim.keymap.set("n", "<leader>w", function ()
   vim.cmd("source $MYVIMRC")
